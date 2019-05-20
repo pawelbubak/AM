@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Lottery</string>
+    <string name="title_activity_greeting">LotteryGreeting</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_register">Sign up</string>
+    <string name="title_activity_ranking">Ranking</string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_up">Create account</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="link_to_sign_up">No account yet? Create one</string>
+    <string name="link_to_sign_in">Already a member? Login</string>
+    <string name="start_game_welcome">Let\'s get started!</string>
+</resources>
