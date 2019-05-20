@@ -15,5 +15,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/rankView"/>
     <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/exitButton"
-            android:text="Wróć"/>
+            android:text="@string/rank_back"/>
 </LinearLayout>

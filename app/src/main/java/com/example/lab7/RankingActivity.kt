@@ -51,6 +51,9 @@ class RankingActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     ranking = ArrayList(dbHelper.allRecord)
                 }
+                if (ranking.isEmpty()) {
+                    ranking = ArrayList(dbHelper.allRecord)
+                }
                 dbHelper.addRecordList(ranking)
                 return ranking
             }

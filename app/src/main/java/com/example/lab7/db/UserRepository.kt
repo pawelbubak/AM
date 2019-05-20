@@ -9,7 +9,7 @@ import com.example.lab7.model.User
 class UserRepository(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 7
         private const val DATABASE_NAME = "com.example.lab7.db"
 
         const val TABLE_NAME = "USERS"
@@ -17,37 +17,20 @@ class UserRepository(context: Context) :
         const val COL_NAME = "NAME"
         const val COL_USER = "USERNAME"
         const val COL_PASS = "PASSWORD"
+        const val COL_POINTS = "POINTS"
+
+        private const val SQL_CREATE_ENTRIES = "CREATE TABLE $TABLE_NAME($COL_ID INTEGER PRIMARY KEY, $COL_USER TEXT NOT NULL UNIQUE, $COL_PASS TEXT, $COL_NAME TEXT, $COL_POINTS INTEGER NOT NULL)"
+        private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS $TABLE_NAME"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        db!!.execSQL("CREATE TABLE $TABLE_NAME($COL_ID INTEGER PRIMARY KEY, $COL_USER TEXT type UNIQUE, $COL_PASS TEXT, $COL_NAME TEXT)")
+        db!!.execSQL(SQL_CREATE_ENTRIES)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db!!.execSQL("DROP TABLE_NAME IF EXISTS " + TABLE_NAME)
+        db!!.execSQL(SQL_DELETE_ENTRIES)
         onCreate(db)
     }
-
-    val allUsers: List<User>
-        get() {
-            val users = ArrayList<User>()
-            val selectQuery = "SELECT * FROM $TABLE_NAME"
-            val db = this.readableDatabase
-            val cursor = db.rawQuery(selectQuery, null)
-            if (cursor.moveToFirst()) {
-                do {
-                    val user = User()
-                    user.id = cursor.getInt(cursor.getColumnIndex(COL_ID))
-                    user.name = cursor.getString(cursor.getColumnIndex(COL_NAME))
-                    user.username = cursor.getString(cursor.getColumnIndex(COL_USER))
-                    user.password = cursor.getString(cursor.getColumnIndex(COL_PASS))
-
-                    users.add(user)
-                } while (cursor.moveToNext())
-            }
-            db.close()
-            return users
-        }
 
     fun addUser(user: User): Long {
         val db = this.writableDatabase
@@ -55,6 +38,7 @@ class UserRepository(context: Context) :
         values.put(COL_NAME, user.name)
         values.put(COL_USER, user.username)
         values.put(COL_PASS, user.password)
+        values.put(COL_POINTS, user.points)
 
         val id = db.insert(TABLE_NAME, null, values)
         db.close()
@@ -71,13 +55,18 @@ class UserRepository(context: Context) :
             user.name = cursor.getString(cursor.getColumnIndex(COL_NAME))
             user.username = cursor.getString(cursor.getColumnIndex(COL_USER))
             user.password = cursor.getString(cursor.getColumnIndex(COL_PASS))
+            user.points = cursor.getInt(cursor.getColumnIndex(COL_POINTS))
 
+            cursor.close()
+            db.close()
             return user
         }
+        cursor.close()
+        db.close()
         return null
     }
 
-    fun getUser(id: Long): User? {
+    fun getUser(id: Int): User? {
         val selectQuery = "SELECT * FROM $TABLE_NAME WHERE $COL_ID=$id"
         val db = this.readableDatabase
         val cursor = db.rawQuery(selectQuery, null)
@@ -87,9 +76,23 @@ class UserRepository(context: Context) :
             user.name = cursor.getString(cursor.getColumnIndex(COL_NAME))
             user.username = cursor.getString(cursor.getColumnIndex(COL_USER))
             user.password = cursor.getString(cursor.getColumnIndex(COL_PASS))
+            user.points = cursor.getInt(cursor.getColumnIndex(COL_POINTS))
 
+            cursor.close()
+            db.close()
             return user
         }
+        cursor.close()
+        db.close()
         return null
+    }
+
+    fun updateUser(user: User) {
+        val db = this.readableDatabase
+        val values = ContentValues().apply {
+            put(COL_POINTS, user.points)
+        }
+        db.update(TABLE_NAME, values, "$COL_ID = ?", arrayOf("${user.id}"))
+        db.close()
     }
 }

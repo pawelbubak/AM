@@ -61,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun register() {
-        class RegisterUser : AsyncTask<Void, Void, Long>() {
+        class RegisterUser : AsyncTask<Void, Void, Int>() {
             override fun onPreExecute() {
                 super.onPreExecute()
                 toggleControls()
@@ -69,22 +69,22 @@ class RegisterActivity : AppCompatActivity() {
                 register.visibility = View.INVISIBLE
             }
 
-            override fun doInBackground(vararg params: Void?): Long {
+            override fun doInBackground(vararg params: Void?): Int {
                 val userRepository = UserRepository(this@RegisterActivity.baseContext)
                 val user = User()
                 user.name = name.text.toString()
                 user.username = username.text.toString()
                 user.password = password.text.toString()
                 sleep(2000)
-                return userRepository.addUser(user)
+                return userRepository.addUser(user).toInt()
             }
 
-            override fun onPostExecute(result: Long?) {
+            override fun onPostExecute(result: Int?) {
                 super.onPostExecute(result)
                 toggleControls()
                 progressBar.visibility = View.GONE
                 register.visibility = View.VISIBLE
-                if (result == null || result == -1L) {
+                if (result == null || result == -1) {
                     return
                 }
 

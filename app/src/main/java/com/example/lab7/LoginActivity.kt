@@ -9,7 +9,6 @@ import android.graphics.PorterDuff
 import android.os.AsyncTask
 import android.util.Log
 import android.view.View
-import com.example.lab7.db.RecordRepository
 import com.example.lab7.db.UserRepository
 import com.example.lab7.model.User
 
@@ -57,9 +56,7 @@ class LoginActivity : AppCompatActivity() {
     private fun validateUser(): User? {
         Log.d(getString(R.string.title_activity_login), "User authentication")
         val user = UserRepository(this@LoginActivity.baseContext).getUser(username.text.toString())
-        Log.d(getString(R.string.title_activity_login), user.toString())
         if (user?.password.equals(password.text.toString())){
-            Log.d(getString(R.string.title_activity_login), "The user was found")
             return user
         }
         return null
@@ -69,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
-                val userId = data?.extras?.getLong("userId")
+                val userId = data?.extras?.getInt("userId")
                 val user = userId?.let { UserRepository(this@LoginActivity.baseContext).getUser(it) }
                 user?.let { login(it) }
                 this.finish()
@@ -93,20 +90,12 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun doInBackground(vararg params: Void?): Void? {
-                val recordRepository = RecordRepository(this@LoginActivity.baseContext)
-                val record = recordRepository.getRecord(user.username!!)
-                var points = 0
-                if (record != null)
-                    points = record.value!!
-
-                Thread.sleep(2000)
-
                 val loginShared = getSharedPreferences("com.example.lab7.prefs", Context.MODE_PRIVATE)
                 val editor = loginShared!!.edit()
                 editor.putInt("userId", user.id)
-                editor.putString("displayName", user.name)
-                editor.putInt("points", points)
                 editor.apply()
+
+                Thread.sleep(1000)
                 return null
             }
 

@@ -20,15 +20,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/lastResult" android:layout_weight="1"/>
     <Button
-            android:text="STRZELAJ"
+            android:text="@string/game_shoot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/shoot" android:layout_weight="1"/>
     <Button
-            android:text="NOWA GRA"
+            android:text="@string/new_game"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/newGame" android:layout_weight="1"/>
     <Button
-            android:text="Ranking"
+            android:text="@string/game_rank"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/rankButton" android:layout_weight="1"/>
+    <Button
+            android:text="@string/game_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/logout" android:layout_weight="1"/>
 </LinearLayout>

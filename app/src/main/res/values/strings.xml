@@ -16,4 +16,9 @@
     <string name="link_to_sign_up">No account yet? Create one</string>
     <string name="link_to_sign_in">Already a member? Login</string>
     <string name="start_game_welcome">Let\'s get started!</string>
+    <string name="game_shoot">Shoot</string>
+    <string name="new_game">New game</string>
+    <string name="game_rank">Ranking</string>
+    <string name="game_logout">Logout</string>
+    <string name="rank_back">Back</string>
 </resources>

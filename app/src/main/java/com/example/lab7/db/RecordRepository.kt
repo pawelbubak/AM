@@ -8,21 +8,24 @@ import com.example.lab7.model.Record
 
 class RecordRepository(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 7
         private const val DATABASE_NAME = "com.example.lab7.db"
 
         const val TABLE_NAME = "RECORDS"
         const val COL_ID = "ID"
         const val COL_USER = "USERNAME"
         const val COL_VAL = "VALUE"
+
+        private const val SQL_CREATE_ENTRIES = "CREATE TABLE $TABLE_NAME($COL_ID INTEGER PRIMARY KEY, $COL_USER TEXT NOT NULL UNIQUE, $COL_VAL TEXT)"
+        private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS $TABLE_NAME"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        db!!.execSQL("CREATE TABLE $TABLE_NAME($COL_ID INTEGER PRIMARY KEY, $COL_USER TEXT type UNIQUE, $COL_VAL TEXT)")
+        db!!.execSQL(SQL_CREATE_ENTRIES)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db!!.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db!!.execSQL(SQL_DELETE_ENTRIES)
         onCreate(db)
     }
 
@@ -42,6 +45,7 @@ class RecordRepository(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
                     records.add(record)
                 } while (cursor.moveToNext())
             }
+            cursor.close()
             db.close()
             return records
         }
@@ -63,23 +67,25 @@ class RecordRepository(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
 
     private fun clearTable() {
         val db = this.writableDatabase
-        val query = "DELETE FROM $TABLE_NAME"
-        db.rawQuery(query, null)
+        db.delete(TABLE_NAME, null, null)
         db.close()
     }
 
     fun getRecord(username: String): Record? {
         val selectQuery = "SELECT * FROM $TABLE_NAME WHERE $COL_USER=\'$username\'"
         val db = this.readableDatabase
+
+        var record: Record? = null
         val cursor = db.rawQuery(selectQuery, null)
         if (cursor.moveToFirst()) {
-            val record = Record()
+            record = Record()
             record.id = cursor.getInt(cursor.getColumnIndex(COL_ID))
             record.username = cursor.getString(cursor.getColumnIndex(COL_USER))
             record.value = cursor.getInt(cursor.getColumnIndex(COL_VAL))
-
-            return record
         }
-        return null
+        cursor.close()
+        db.close()
+
+        return record
     }
 }
